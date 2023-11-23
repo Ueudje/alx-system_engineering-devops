@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Write a Bash script that displays: content all file.
+
+file=$(ls); for file in $file; do echo "$file" | cut -d "-" -f2; done
