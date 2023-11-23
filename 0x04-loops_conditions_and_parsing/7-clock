@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Write a Bash script that displays the time for 12 hours and 59 minutes:
+
+minutes=1
+hours=0
+
+while [ $minutes -le 59 ]
+do
+    if [ $minutes == 1 ]
+    then
+        echo -e "Hour: $hours"
+        (( hours++ ))
+    fi
+
+    echo "$minutes"
+    if [ $minutes == 59 ]
+    then
+        if [ "$hours" == 13 ]
+        then
+            break
+        fi
+        minutes=0
+    fi
+    (( minutes++ ))
+done
