@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# this Bash script that displays Best School 10 times. using while.
+
+count=0
+while [ $count -le 9 ]
+do 
+    echo "Best School" 
+    ((count++))
+done
