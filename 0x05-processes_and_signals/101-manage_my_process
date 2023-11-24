@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+# Comment
+
+start_f()
+{
+	./manage_my_process &
+	echo "$!" > /var/run/my_process.pid
+	echo "manage_my_process started"
+}
+
+stop_f()
+{
+	kill "$(cat /var/run/my_process.pid)"
+	rm -rf /var/run/my_process.pid
+	echo "manage_my_process stopped"
+}
+
+restart_f()
+{
+	kill "$(cat /var/run/my_process.pid)"
+	rm -rf /var/run/my_process.pid
+	./manage_my_process &
+	echo "$!" > /var/run/my_process.pid
+	echo "manage_my_process restarted"
+}
+
+error_f()
+{
+	echo "Usage: manage_my_process {start|stop|restart}"
+	exit 1
+}
+
+if [ $# -ne 1 ]; then
+	error_f
+fi
+
+while [ $# -gt 0 ]
+do
+	opt="$1"
+	shift;
+	case $opt in
+		start)
+			start_f
+			;;
+
+		stop)
+			stop_f
+			;;
+
+		restart)
+			restart_f
+			;;
+		*)
+			error_f
+			;;
+	esac
+done
