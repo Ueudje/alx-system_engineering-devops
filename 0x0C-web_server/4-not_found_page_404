@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# Install nginx web server
+
+# update operating system and install nginx 
+apt-get -y update && apt-get install -y nginx
+
+# allow incomming trafic on default NGINX HTTP
+ufw allow 'Nginx HTTP'
+
+# make sure that directory is exists
+mkdir -p /var/www/html && chmod -R 755 /var/www
+
+# make index.html file contains hello world!
+echo "Hello World!" > /var/www/html/index.html
+
+# print this error if location not found
+echo "Ceci n'est pas une page" > /var/www/html/404.html
+
+# tee command change setting to listen to port 80
+tee /etc/nginx/sites-available/default > /dev/null <<EOF
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    root /var/www/html;
+    index index.html;
+
+    location / {
+        try_files \$uri \$uri/ =404;
+    }
+
+    location /redirect_me {
+        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
+    }
+
+    error_page 404 /404.html;
+    location = /404.html {
+        internal;
+    }
+}
+EOF
+
+# restart nginx to save the change
+sudo service nginx restart
