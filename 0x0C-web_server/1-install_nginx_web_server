@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# Install nginx web server
+
+# update operating system and install nginx 
+apt-get -y update && apt-get install -y nginx
+
+# allow incomming trafic on default NGINX HTTP
+ufw allow 'Nginx HTTP'
+
+# make sure that directory is exists
+mkdir -p /var/www/html && chmod -R 755 /var/www
+
+# make index.html file contains hello world!
+echo 'Hello World!' > /var/www/html/index.html
+
+# tee command change setting to listen to port 80
+tee /etc/nginx/sites-available/default > /dev/null <<EOF
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    root /var/www/html;
+    index index.html;
+
+    location / {
+        try_files \$uri \$uri/ =404;
+    }
+}
+EOF
+
+# restart nginx to save the change
+sudo service nginx restart
