@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-# Web stack debugging
-sudo service apache2 start
