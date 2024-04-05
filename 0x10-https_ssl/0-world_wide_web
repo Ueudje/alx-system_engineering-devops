@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# add the subdomain lb-01, www, web-01, web-02
+
+# print output
+Print() {
+    local subdomains=("$@")
+    local domain="${subdomains[-1]}"
+    for ((i = 0; i < ${#subdomains[@]} - 1; i++)); do
+        dig_output=$(dig "${subdomains[$i]}.$domain")
+        RECORD_TYPE=$(echo "$dig_output" | awk '/^;; ANSWER SECTION:$/,/^$/ {if ($1 == domain_name) {print $4}}' domain_name="${subdomains[$i]}.$domain.")
+        DESTINATION=$(echo "$dig_output" | awk '/^;; ANSWER SECTION:$/,/^$/ {if ($1 == domain_name) {print $5}}' domain_name="${subdomains[$i]}.$domain.")
+        echo "The subdomain ${subdomains[$i]} is a $RECORD_TYPE record and points to $DESTINATION"
+    done
+}
+
+
+if [ $# -ne 0 ]; then
+    domain="$1"
+    if [ $# -eq 1 ]; then
+        Print "www" "lb-01" "web-01" "web-02" "$domain"
+    else
+        subdomain="$2"
+        Print "$subdomain" "$domain"
+    fi
+fi
