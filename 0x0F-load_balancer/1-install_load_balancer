@@ -11,10 +11,10 @@ apt-get -y install haproxy
 # edit config file
 server_config=\
 "
-frontend  Ueudje_frontend
+frontend  ueudje_frontend
         bind *:80
         mode http
-        default_backend Ueudje_backend
+        default_backend ueudje_backend
 backend Ueudje_backend
         balance roundrobin
         server 371891-web-01 52.205.146.1:80 check
@@ -28,5 +28,5 @@ echo "ENABLED=1" | sudo tee -a /etc/default/haproxy
 # Testing the HAproxy configuration file
 sudo haproxy -c -f /etc/haproxy/haproxy.cfg
 
-# Restart the Nginx service
+# Restart the nginx service
 sudo service haproxy restarti
